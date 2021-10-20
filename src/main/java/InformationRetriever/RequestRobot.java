@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 public class RequestRobot {
 
@@ -22,13 +23,15 @@ public class RequestRobot {
                 .parallel()
                 .filter(processHandle -> processHandle.info().toString().contains("LeagueClientUx.exe"))
                 .findAny();
+        System.out.println(leagueClientUx.isPresent());
         while (leagueClientUx.isEmpty()) {
             leagueClientUx = ProcessHandle.allProcesses()
                     .parallel()
                     .filter(processHandle -> processHandle.info().toString().contains("LeagueClientUx.exe"))
                     .findAny();
             try {
-                leagueClientUx.wait(5000);
+                TimeUnit.SECONDS.sleep(5);
+                System.out.println("Waiting! ");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -43,10 +46,35 @@ public class RequestRobot {
         return reader.readLine();
     }
 
-    public void doRequest(String request, Method method) {
-        if (method == Method.GET){
-            requestStation.sendGet(request);
+    public String doRequest(String request, Method method) throws Exception {
+        if (request.isEmpty()){
+            request = "/lol-chat/v1/me";
         }
+        if (method == Method.GET) {
+
+            return requestStation.sendGet(request);
+        }
+        if (method == Method.PUT) {
+            requestStation.sendPut(request, new String[]{"rankedLeagueTier", "IRON"});
+        }
+
+        return "";
+
+    }
+
+    public String doRequest(String request, Method method, String[] body) throws Exception {
+        if (request.isEmpty()){
+            request = "/lol-chat/v1/me";
+        }
+        if (method == Method.GET) {
+
+            return requestStation.sendGet(request);
+        }
+        if (method == Method.PUT) {
+            requestStation.sendPut(request, body);
+        }
+
+        return "";
 
     }
 
