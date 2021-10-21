@@ -40,7 +40,7 @@ public class Parser {
         String response = robot.doRequest("/lol-chat/v1/me", Method.GET);
         for (String s : response.split(",")) {
             if (s.split(":")[0].matches("\"" + key + "\"")) {
-                return s.split(":")[1].replaceAll("\"", "");
+                return new String(s.split(":")[1].replaceAll("\"", "")) ;
             }
         }
         System.out.println();

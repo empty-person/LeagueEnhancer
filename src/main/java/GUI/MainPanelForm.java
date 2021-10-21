@@ -6,6 +6,7 @@ import com.formdev.flatlaf.FlatIntelliJLaf;
 
 import javax.swing.*;
 import javax.swing.plaf.ComboBoxUI;
+import javax.swing.plaf.metal.MetalButtonUI;
 import javax.swing.plaf.metal.MetalComboBoxUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -21,6 +22,14 @@ public class MainPanelForm {
     private JComboBox rankedLeagueTierBox;
     private JComboBox rankedLeagueDivisionBox;
     private JComboBox rankedLeagueQueueBox;
+    private JPanel iconPanel;
+    private JTextArea i;
+    private JButton submitButton;
+    private JCheckBox autoacceptCheckBox;
+    private JCheckBox devCheckBox1;
+    private JCheckBox devCheckBox;
+    private JCheckBox instalockCheckBox;
+    private JPanel checkmarkButtons;
 
     public MainPanelForm() throws Exception {
         icon.setIcon(new ImageIcon(new URL("https://ddragon.leagueoflegends.com/cdn/11.21.1/img/profileicon/" + Parser.getIconId() + ".png")));
@@ -29,7 +38,7 @@ public class MainPanelForm {
         rankedLeagueTierBox.setUI(hideArrow(rankedLeagueTierBox));
         rankedLeagueDivisionBox.setUI(hideArrow(rankedLeagueDivisionBox));
         rankedLeagueQueueBox.setUI(hideArrow(rankedLeagueQueueBox));
-
+        submitButton.setUI((new MetalButtonUI()));
 
     }
 
