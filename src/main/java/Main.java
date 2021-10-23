@@ -13,13 +13,10 @@ public class Main {
     public static void main(String[] args) throws Exception {
         MainPanelForm.generate();
 
-        RequestRobot robot = new RequestRobot();
-        String s = robot.doRequest("/lol-chat/v1/me", Method.GET);
-        //robot.doRequest("/lol-chat/v1/me", Method.PUT);
-       // robot.doRequest("/lol-chat/v1/me", Method.PUT, new String[]{"rankedLeagueDivision", "II"});
 
 
-        System.out.println(s);
+
+
 //        try {
 //            URL url = new URL("http://cdn.merakianalytics.com/riot/lol/resources/latest/en-US/champions/Akali.json");
 //            HttpURLConnection conn = (HttpURLConnection)url.openConnection();

@@ -45,7 +45,9 @@ public class RequestRobot {
 
         return reader.readLine();
     }
-
+    /**
+     This method runs with /lol-chat/v1/me address if request is empty
+     */
     public String doRequest(String request, Method method) throws Exception {
         if (request.isEmpty()){
             request = "/lol-chat/v1/me";

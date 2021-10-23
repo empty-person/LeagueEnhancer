@@ -87,13 +87,18 @@ public class RequestStation {
         httpClient.setRequestProperty("Authorization", "Basic " + AuthHelper.get64(lockfile));
         httpClient.setDoOutput(true);
         String data1 = "{\n  \"lol\":{\n  \"rankedLeagueQueue\":\"RANKED_SOLO_5x5\",\n  \"rankedLeagueTier\":\"PLATINUM\",\n  \"rankedLeagueDivision\":\"I\"\n  }}\n";
-        String data = "{\n  \"lol\":{\n  \"" + keyValue[0] + "\":\"" + keyValue[1] + "\" \n  }}\n";
+        String data = "{\n  \"" + "how" + "\":\"" + "is this possible" + "\" \n  }";
+        if (!keyValue[0].equals("statusMessage") && !keyValue[0].equals("icon")) {
+            data = "{\n  \"lol\":{\n  \"" + keyValue[0] + "\":\"" + keyValue[1] + "\" \n  }}\n";
+        } else {
+            data = "{\n  \"" + keyValue[0] + "\":\"" + keyValue[1] + "\" \n  }";
+        }
         byte[] out = data.getBytes(StandardCharsets.UTF_8);
 
         OutputStream stream = httpClient.getOutputStream();
         stream.write(out);
         System.out.println("__________________________________________________");
-        System.out.println("Put request..."+data+httpClient.getResponseCode() + " " + httpClient.getResponseMessage());
+        System.out.println("Put request..." + data + httpClient.getResponseCode() + " " + httpClient.getResponseMessage());
         System.out.println("__________________________________________________");
         httpClient.disconnect();
 //

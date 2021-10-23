@@ -23,4 +23,11 @@ public class FormRobot {
 
     }
 
+    public static void changeMe(String key, String value, String request) throws Exception {
+
+        robot.doRequest(request, Method.PUT, new String[]{key, value});
+
+
+    }
+
 }

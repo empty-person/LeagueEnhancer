@@ -33,18 +33,31 @@ public class Parser {
         return getMe("rankedLeagueDivision");
     }public static String getIconId() throws Exception {
         return getMe("icon");
+    }public static String getStatusMessage() throws Exception {
+        return getMe("statusMessage");
     }
 
 
     private static String getMe(String key) throws Exception {
         String response = robot.doRequest("/lol-chat/v1/me", Method.GET);
-        for (String s : response.split(",")) {
-            if (s.split(":")[0].matches("\"" + key + "\"")) {
-                return new String(s.split(":")[1].replaceAll("\"", "")) ;
+        if (!key.equals("statusMessage")){
+            for (String s : response.split(",")) {
+                if (s.split(":")[0].matches("\"" + key + "\"")) {
+                    return new String(s.split(":")[1].replaceAll("\"", "")) ;
+                }
+            }
+        }else {
+            String[] split = response.split(",");
+            for (int i = split.length-1; i > 0; i--) {
+                String s = split[i];
+                if (s.split(":")[0].matches("\"" + key + "\"")) {
+                    return new String(s.split(":")[1].replaceAll("\"", "")) ;
+                }
             }
         }
+
         System.out.println();
-        return "fail";
+        return "failParser";
     }
 
     private void tem() throws Exception {

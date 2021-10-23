@@ -9,8 +9,8 @@ import javax.swing.plaf.ComboBoxUI;
 import javax.swing.plaf.metal.MetalButtonUI;
 import javax.swing.plaf.metal.MetalComboBoxUI;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.Objects;
 
@@ -23,23 +23,63 @@ public class MainPanelForm {
     private JComboBox rankedLeagueDivisionBox;
     private JComboBox rankedLeagueQueueBox;
     private JPanel iconPanel;
-    private JTextArea i;
-    private JButton submitButton;
+    private JTextArea statusMessage;
+    private JButton submitStatusButton;
     private JCheckBox autoacceptCheckBox;
     private JCheckBox devCheckBox1;
-    private JCheckBox devCheckBox;
+    private JCheckBox autobanCheckBox;
     private JCheckBox instalockCheckBox;
     private JPanel checkmarkButtons;
+// TODO: 10/23/2021 do.it.
+    private void invokeImageUpdate(int timer) throws InterruptedException {
+
+    }
+    private void updateImageIcon() throws Exception {
+        BufferedImage bufferedImage =
+                ImageManager.simpleResizeImage(ImageManager.imageToBufferedImage(new ImageIcon(new URL("https://ddragon.leagueoflegends.com/cdn/11.21.1/img/profileicon/" + Parser.getIconId() + ".png")).getImage()), 240);
+        ImageIcon imageIcon1 = new ImageIcon(bufferedImage);
+        icon.setIcon(imageIcon1);
+        System.out.println("Profile icon updated");
+    }
 
     public MainPanelForm() throws Exception {
-        icon.setIcon(new ImageIcon(new URL("https://ddragon.leagueoflegends.com/cdn/11.21.1/img/profileicon/" + Parser.getIconId() + ".png")));
+        updateImageIcon();
+        invokeImageUpdate(5);
         name.setText(Parser.getName());
         tag.setText(Parser.getTag());
         rankedLeagueTierBox.setUI(hideArrow(rankedLeagueTierBox));
         rankedLeagueDivisionBox.setUI(hideArrow(rankedLeagueDivisionBox));
         rankedLeagueQueueBox.setUI(hideArrow(rankedLeagueQueueBox));
-        submitButton.setUI((new MetalButtonUI()));
+        submitStatusButton.setUI((new MetalButtonUI()));
+        statusMessage.setText(Parser.getStatusMessage());
+        submitStatusButton.addActionListener(e -> {
+            try {
+                FormRobot.changeMe(statusMessage.getName(), Objects.requireNonNull(statusMessage.getText()).toString());
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        });
+        iconPanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                try {
+                    IconPanel.generate();
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+            }
+        });
 
+        panel1.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                try {
+                    updateImageIcon();
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+            }
+        });
     }
 
     public static void generate() throws Exception {
@@ -64,19 +104,12 @@ public class MainPanelForm {
         }
         comboBox.removeAllItems();
 
-        String firstItem;
-        if (comboBox.getName().equals("rankedLeagueTier")) {
-            firstItem = Parser.getLeagueTier();
-
-        } else if (comboBox.getName().equals("rankedLeagueQueue")) {
-            firstItem = Parser.getLeagueQueue();
-
-        } else if (comboBox.getName().equals("rankedLeagueDivision")) {
-            firstItem = Parser.getLeagueDivision();
-
-        } else {
-            firstItem = "In Dev";
-        }
+        String firstItem = switch (comboBox.getName()) {
+            case "rankedLeagueTier" -> Parser.getLeagueTier();
+            case "rankedLeagueQueue" -> Parser.getLeagueQueue();
+            case "rankedLeagueDivision" -> Parser.getLeagueDivision();
+            default -> "In Dev";
+        };
         comboBoxList[0] = firstItem;
         for (int i = 0; i < comboBoxList.length; i++) {
             if (i > 0) {
