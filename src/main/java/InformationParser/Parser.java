@@ -35,15 +35,22 @@ public class Parser {
         return getMe("icon");
     }public static String getStatusMessage() throws Exception {
         return getMe("statusMessage");
+    }public static String getSearchState() throws Exception{
+        return getMe("searchState");
     }
 
 
     private static String getMe(String key) throws Exception {
-        String response = robot.doRequest("/lol-chat/v1/me", Method.GET);
-        if (!key.equals("statusMessage")){
+        String response;
+        if (key.equals("searchState")){
+            response = robot.doRequest("/lol-lobby/v2/lobby/matchmaking/search-state", Method.GET);
+        }else {
+            response = robot.doRequest("/lol-chat/v1/me", Method.GET);
+        }
+        if (!key.equals("statusMessage") ){
             for (String s : response.split(",")) {
                 if (s.split(":")[0].matches("\"" + key + "\"")) {
-                    return new String(s.split(":")[1].replaceAll("\"", "")) ;
+                    return new String(s.split(":")[1].replaceAll("\"", "")).replaceAll("}", "") ;
                 }
             }
         }else {

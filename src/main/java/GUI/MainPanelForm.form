@@ -218,6 +218,7 @@
         </constraints>
         <properties>
           <background color="-14144460"/>
+          <visible value="true"/>
         </properties>
         <border type="etched" title="heehe">
           <title-color color="-9010809"/>
