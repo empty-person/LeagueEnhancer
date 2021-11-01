@@ -1,4 +1,4 @@
 # LeagueEnhancer
 in dev..
-I need a designer and SEO open agents!
+Looking for designer and SEO open agents!
 zagnus'#5117
