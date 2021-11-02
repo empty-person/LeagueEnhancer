@@ -19,52 +19,94 @@ public class Parser {
     }
 
 
-
     public static String getName() throws Exception {
         return getMe("gameName");
-    }public static String getTag() throws Exception {
+    }
+
+    public static String getTag() throws Exception {
         return getMe("gameTag");
     }
+
     public static String getLeagueTier() throws Exception {
         return getMe("rankedLeagueTier");
-    }public static String getLeagueQueue() throws Exception {
+    }
+
+    public static String getLeagueQueue() throws Exception {
         return getMe("rankedLeagueQueue");
-    }public static String getLeagueDivision() throws Exception {
+    }
+
+    public static String getLeagueDivision() throws Exception {
         return getMe("rankedLeagueDivision");
-    }public static String getIconId() throws Exception {
+    }
+
+    public static String getIconId() throws Exception {
         return getMe("icon");
-    }public static String getStatusMessage() throws Exception {
+    }
+
+    public static String getStatusMessage() throws Exception {
         return getMe("statusMessage");
-    }public static String getSearchState() throws Exception{
+    }
+
+    public static String getSearchState() throws Exception {
         return getMe("searchState");
     }
 
+    public static String[] getOwnedChampions() throws Exception {
+        return champsRetrieve();
+    }
+
+    private static String[] champsRetrieve() throws Exception {
+        String[] s = robot.doRequest("/lol-champions/v1/owned-champions-minimal", Method.GET).split("},");
+        StringBuilder text = new StringBuilder();
+
+        for (int i = 0; i < s.length; i++) {
+            String temp = s[i] + s[i + 1];
+            i++;
+            text.append(temp, temp.indexOf("ownership") + 45, temp.indexOf("rental") - 2)
+                    .append(":")
+                    .append(temp, temp.indexOf("alias") + 8, temp.indexOf("banVoPath") - 3)
+                    .append("#");
+        }
+
+
+        StringBuilder returnChampions = new StringBuilder();
+
+        s = String.valueOf(text).split("#");
+
+        for (int i = 0; i < s.length; i++) {
+            String[] temp = s[i].split(":");
+            if (temp[0].equals("true")) {
+                returnChampions.append(temp[1] + ",");
+            }
+        }
+        return String.valueOf(returnChampions).split(",");
+    }
 
     private static String getMe(String key) throws Exception {
         String response;
-        if (key.equals("searchState")){
+        if (key.equals("searchState")) {
             response = robot.doRequest("/lol-lobby/v2/lobby/matchmaking/search-state", Method.GET);
-        }else {
+        } else {
             response = robot.doRequest("/lol-chat/v1/me", Method.GET);
         }
-        if (!key.equals("statusMessage") ){
+        if (!key.equals("statusMessage")) {
             for (String s : response.split(",")) {
                 if (s.split(":")[0].matches("\"" + key + "\"")) {
-                    return new String(s.split(":")[1].replaceAll("\"", "")).replaceAll("}", "") ;
+                    return new String(s.split(":")[1].replaceAll("\"", "")).replaceAll("}", "");
                 }
             }
-        }else {
+        } else {
             String[] split = response.split(",");
-            for (int i = split.length-1; i > 0; i--) {
+            for (int i = split.length - 1; i > 0; i--) {
                 String s = split[i];
                 if (s.split(":")[0].matches("\"" + key + "\"")) {
-                    return new String(s.split(":")[1].replaceAll("\"", "")) ;
+                    return new String(s.split(":")[1].replaceAll("\"", ""));
                 }
             }
         }
 
         System.out.println();
-        return "failParser";
+        return "Undefined";
     }
 
     private void tem() throws Exception {

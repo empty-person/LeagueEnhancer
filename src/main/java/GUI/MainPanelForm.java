@@ -1,7 +1,9 @@
 package GUI;
 
 import GUI.Helper.FormRobot;
+import HeheXD.SafeAutoAcceptProcess;
 import InformationParser.Parser;
+import InformationRetriever.Method;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 
 import javax.swing.*;
@@ -13,6 +15,8 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainPanelForm {
     private JPanel panel1;
@@ -43,7 +47,17 @@ public class MainPanelForm {
     }
 
     public MainPanelForm() throws Exception {
-        updateImageIcon();
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    updateImageIcon();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 30, 4000);
+
         invokeImageUpdate(5);
         name.setText(Parser.getName());
         tag.setText(Parser.getTag());
@@ -70,13 +84,28 @@ public class MainPanelForm {
             }
         });
 
-        panel1.addMouseMotionListener(new MouseMotionAdapter() {
+//        panel1.addMouseMotionListener(new MouseMotionAdapter() {
+//            @Override
+//            public void mouseMoved(MouseEvent e) {
+//                try {
+//                    updateImageIcon();
+//                } catch (Exception exception) {
+//                    exception.printStackTrace();
+//                }
+//            }
+//        });
+        autoacceptCheckBox.addActionListener(new ActionListener() {
             @Override
-            public void mouseMoved(MouseEvent e) {
-                try {
-                    updateImageIcon();
-                } catch (Exception exception) {
-                    exception.printStackTrace();
+            public void actionPerformed(ActionEvent e) {
+                if (autoacceptCheckBox.isSelected()){
+                    try {
+                        SafeAutoAcceptProcess.start();
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                    }
+                }
+                else {
+                    SafeAutoAcceptProcess.stop();
                 }
             }
         });

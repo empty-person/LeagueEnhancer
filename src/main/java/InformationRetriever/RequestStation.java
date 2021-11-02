@@ -30,11 +30,54 @@ public class RequestStation {
             e.printStackTrace();
         }
     }
+    public void sendPost(String request, String[] body) {
+        try {
+            sendPostRequest(request);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public String sendGet(String request) throws Exception {
 
         return sendGetRequest(request);
 
+    }
+    private String sendPostRequest(String request) throws Exception {
+//https://127.0.0.1:65227/
+//https://127.0.0.1:65227/lol-chat/v1/me
+        String url = "https://127.0.0.1:" + AuthHelper.getPort(lockfile) + request;
+        HttpURLConnection httpClient =
+                (HttpURLConnection) new URL(url).openConnection();
+
+        TrustModifier.relaxHostChecking(httpClient);
+
+        httpClient.setRequestMethod("POST");
+        httpClient.setRequestProperty("User-Agent", "Mozilla/5.0");
+        httpClient.setRequestProperty("Accept", "application/json");
+        httpClient.setRequestProperty("Content-Length", "0");
+        httpClient.setRequestProperty("Authorization", "Basic " + AuthHelper.get64(lockfile));
+//
+        int responsez = httpClient.getResponseCode();
+        String responsex = httpClient.getResponseMessage();
+        System.out.println("__________________________________________________");
+        System.out.println("Response from [" + url + "] (POST) is " + responsez + " " + responsex);
+        System.out.println("__________________________________________________");
+//
+        try (BufferedReader in = new BufferedReader(
+                new InputStreamReader(httpClient.getInputStream()))) {
+
+            StringBuilder response = new StringBuilder();
+            String line;
+
+            while ((line = in.readLine()) != null) {
+                response.append(line);
+            }
+
+            //print result
+            //System.out.println(response.toString());
+            return response.toString();
+        }
     }
 
     private String sendGetRequest(String request) throws Exception {
@@ -103,4 +146,5 @@ public class RequestStation {
         httpClient.disconnect();
 //
     }
+
 }

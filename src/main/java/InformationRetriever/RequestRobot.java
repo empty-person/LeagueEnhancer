@@ -59,6 +59,9 @@ public class RequestRobot {
         if (method == Method.PUT) {
             requestStation.sendPut(request, new String[]{"rankedLeagueTier", "IRON"});
         }
+        if (method == Method.POST){
+            requestStation.sendPost(request, new String[]{""});
+        }
 
         return "";
 
@@ -74,6 +77,9 @@ public class RequestRobot {
         }
         if (method == Method.PUT) {
             requestStation.sendPut(request, body);
+        }
+        if (method == Method.POST){
+            requestStation.sendPost(request, body);
         }
 
         return "";

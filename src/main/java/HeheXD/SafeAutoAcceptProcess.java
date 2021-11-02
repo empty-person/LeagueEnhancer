@@ -11,7 +11,7 @@ import java.util.TimerTask;
 public class SafeAutoAcceptProcess {
 
     static RequestRobot robot;
-
+    static Timer timer = new Timer();
     static {
         try {
             robot = new RequestRobot();
@@ -19,21 +19,27 @@ public class SafeAutoAcceptProcess {
             e.printStackTrace();
         }
     }
-    public static void main(String[] args) throws Exception {
-        Timer timer = new Timer();
+    public static void stop(){
+        timer.cancel();
+    }
+    public static void start() throws Exception {
+
 
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 try {
-                    System.out.println(Parser.getSearchState());
+                    String searchState = Parser.getSearchState();
+                    if (searchState.equals("Found")){
+                        robot.doRequest("/lol-matchmaking/v1/ready-check/accept", Method.POST);
+                        timer.cancel();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-        }, 30, 5000);
-
-
+        }, 30, 1000);
+        //Invalid Searching Found
 
     }
 
