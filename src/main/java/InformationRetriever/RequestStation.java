@@ -23,6 +23,14 @@ public class RequestStation {
         }
     }
 
+    public void sendPatch(String request) {
+        try {
+            sendPatchRequest(request);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void sendPut(String request, String[] body) {
         try {
             sendPutRequest(request, body);
@@ -30,6 +38,7 @@ public class RequestStation {
             e.printStackTrace();
         }
     }
+
     public void sendPost(String request, String[] body) {
         try {
             sendPostRequest(request);
@@ -43,6 +52,7 @@ public class RequestStation {
         return sendGetRequest(request);
 
     }
+
     private String sendPostRequest(String request) throws Exception {
 //https://127.0.0.1:65227/
 //https://127.0.0.1:65227/lol-chat/v1/me
@@ -144,6 +154,10 @@ public class RequestStation {
         System.out.println("Put request..." + data + httpClient.getResponseCode() + " " + httpClient.getResponseMessage());
         System.out.println("__________________________________________________");
         httpClient.disconnect();
+//
+    }
+
+    private void sendPatchRequest(String request) throws Exception {
 //
     }
 

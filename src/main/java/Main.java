@@ -1,10 +1,11 @@
 import GUI.MainPanelForm;
+import InformationRetriever.Method;
+import InformationRetriever.RequestRobot;
 
 public class Main {
 
     public static void main(String[] args) throws Exception {
-        MainPanelForm.generate();
-
+       MainPanelForm.generate();
 
 //        try {
 //            URL url = new URL("http://cdn.merakianalytics.com/riot/lol/resources/latest/en-US/champions/Akali.json");

@@ -17,6 +17,7 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 public class MainPanelForm {
     private JPanel panel1;
@@ -106,6 +107,22 @@ public class MainPanelForm {
                 }
                 else {
                     SafeAutoAcceptProcess.stop();
+                }
+            }
+        });
+        instalockCheckBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    ChampionsPanel.generate();
+                    new Timer().scheduleAtFixedRate(new TimerTask() {
+                        @Override
+                        public void run() {
+                            System.out.println(ChampionsPanel.getValue());
+                        }
+                    }, 30, 1000);
+                } catch (Exception exception) {
+                    exception.printStackTrace();
                 }
             }
         });

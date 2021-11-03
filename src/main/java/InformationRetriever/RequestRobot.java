@@ -63,6 +63,7 @@ public class RequestRobot {
             requestStation.sendPost(request, new String[]{""});
         }
 
+
         return "";
 
     }
@@ -80,6 +81,9 @@ public class RequestRobot {
         }
         if (method == Method.POST){
             requestStation.sendPost(request, body);
+        }
+        if (method==Method.PATCH){
+            requestStation.sendPatch(request);
         }
 
         return "";
