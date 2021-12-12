@@ -14,7 +14,7 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     implementation 'com.formdev:flatlaf:1.6.1'
     implementation 'org.imgscalr:imgscalr-lib:4.2'
-
+    compile 'io.github.cdimascio:dotenv-java:2.2.0'
 }
 
 test {

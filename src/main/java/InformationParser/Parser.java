@@ -1,9 +1,11 @@
 package InformationParser;
 
+import Helper.env;
 import InformationRetriever.Method;
 import InformationRetriever.RequestRobot;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,7 +60,6 @@ public class Parser {
     private static String[] champsRetrieve() throws Exception {
         String[] s = robot.doRequest("/lol-champions/v1/owned-champions-minimal", Method.GET).split("},");
         StringBuilder text = new StringBuilder();
-
         for (int i = 0; i < s.length; i++) {
             String temp = s[i] + s[i + 1];
             i++;
@@ -67,7 +68,7 @@ public class Parser {
                     .append(temp, temp.indexOf("alias") + 8, temp.indexOf("banVoPath") - 3)
                     .append("#");
         }
-
+        System.out.println(text);
 
         StringBuilder returnChampions = new StringBuilder();
 
@@ -105,7 +106,7 @@ public class Parser {
             }
         }
 
-        System.out.println();
+
         return "Undefined";
     }
 
@@ -139,7 +140,10 @@ public class Parser {
                 }
 
             }
-            System.out.println(lala);
+            if (env.isLogging()){
+                System.out.println(lala);
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }

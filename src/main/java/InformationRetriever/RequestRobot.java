@@ -1,5 +1,7 @@
 package InformationRetriever;
 
+import Helper.env;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -8,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 public class RequestRobot {
 
+    private final boolean enableLogging = env.isLogging();
     RequestStation requestStation;
     String LockfileText;
 
@@ -45,11 +48,12 @@ public class RequestRobot {
 
         return reader.readLine();
     }
+
     /**
-     This method runs with /lol-chat/v1/me address if request is empty
+     * This method runs with /lol-chat/v1/me address if request is empty
      */
     public String doRequest(String request, Method method) throws Exception {
-        if (request.isEmpty()){
+        if (request.isEmpty()) {
             request = "/lol-chat/v1/me";
         }
         if (method == Method.GET) {
@@ -59,7 +63,7 @@ public class RequestRobot {
         if (method == Method.PUT) {
             requestStation.sendPut(request, new String[]{"rankedLeagueTier", "IRON"});
         }
-        if (method == Method.POST){
+        if (method == Method.POST) {
             requestStation.sendPost(request, new String[]{""});
         }
 
@@ -69,7 +73,7 @@ public class RequestRobot {
     }
 
     public String doRequest(String request, Method method, String[] body) throws Exception {
-        if (request.isEmpty()){
+        if (request.isEmpty()) {
             request = "/lol-chat/v1/me";
         }
         if (method == Method.GET) {
@@ -79,10 +83,10 @@ public class RequestRobot {
         if (method == Method.PUT) {
             requestStation.sendPut(request, body);
         }
-        if (method == Method.POST){
+        if (method == Method.POST) {
             requestStation.sendPost(request, body);
         }
-        if (method==Method.PATCH){
+        if (method == Method.PATCH) {
             requestStation.sendPatch(request);
         }
 

@@ -203,6 +203,7 @@
               <background color="-14144460"/>
               <font name="Consolas"/>
               <foreground color="-5590593"/>
+              <hideActionText value="true"/>
               <requestFocusEnabled value="false"/>
               <text value="Submit"/>
               <verticalAlignment value="0"/>

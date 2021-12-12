@@ -2,8 +2,8 @@ package GUI;
 
 import GUI.Helper.FormRobot;
 import HeheXD.SafeAutoAcceptProcess;
+import Helper.env;
 import InformationParser.Parser;
-import InformationRetriever.Method;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 
 import javax.swing.*;
@@ -11,13 +11,15 @@ import javax.swing.plaf.ComboBoxUI;
 import javax.swing.plaf.metal.MetalButtonUI;
 import javax.swing.plaf.metal.MetalComboBoxUI;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
 
 public class MainPanelForm {
     private JPanel panel1;
@@ -35,17 +37,6 @@ public class MainPanelForm {
     private JCheckBox autobanCheckBox;
     private JCheckBox instalockCheckBox;
     private JPanel checkmarkButtons;
-// TODO: 10/23/2021 do.it.
-    private void invokeImageUpdate(int timer) throws InterruptedException {
-
-    }
-    private void updateImageIcon() throws Exception {
-        BufferedImage bufferedImage =
-                ImageManager.simpleResizeImage(ImageManager.imageToBufferedImage(new ImageIcon(new URL("https://ddragon.leagueoflegends.com/cdn/11.21.1/img/profileicon/" + Parser.getIconId() + ".png")).getImage()), 240);
-        ImageIcon imageIcon1 = new ImageIcon(bufferedImage);
-        icon.setIcon(imageIcon1);
-        System.out.println("Profile icon updated");
-    }
 
     public MainPanelForm() throws Exception {
         new Timer().scheduleAtFixedRate(new TimerTask() {
@@ -66,7 +57,7 @@ public class MainPanelForm {
         rankedLeagueDivisionBox.setUI(hideArrow(rankedLeagueDivisionBox));
         rankedLeagueQueueBox.setUI(hideArrow(rankedLeagueQueueBox));
         submitStatusButton.setUI((new MetalButtonUI()));
-        statusMessage.setText(Parser.getStatusMessage());
+        //statusMessage.setText(Parser.getStatusMessage());
         submitStatusButton.addActionListener(e -> {
             try {
                 FormRobot.changeMe(statusMessage.getName(), Objects.requireNonNull(statusMessage.getText()).toString());
@@ -98,14 +89,14 @@ public class MainPanelForm {
         autoacceptCheckBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (autoacceptCheckBox.isSelected()){
+                System.out.println(autoacceptCheckBox.isSelected());
+                if (autoacceptCheckBox.isSelected()) {
                     try {
                         SafeAutoAcceptProcess.start();
                     } catch (Exception exception) {
                         exception.printStackTrace();
                     }
-                }
-                else {
+                } else {
                     SafeAutoAcceptProcess.stop();
                 }
             }
@@ -113,17 +104,22 @@ public class MainPanelForm {
         instalockCheckBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    ChampionsPanel.generate();
-                    new Timer().scheduleAtFixedRate(new TimerTask() {
-                        @Override
-                        public void run() {
-                            System.out.println(ChampionsPanel.getValue());
-                        }
-                    }, 30, 1000);
-                } catch (Exception exception) {
-                    exception.printStackTrace();
+                if (instalockCheckBox.isSelected()){
+                    try {
+                        ChampionsPanel.generate();
+                        new Timer().scheduleAtFixedRate(new TimerTask() {
+                            @Override
+                            public void run() {
+                                System.out.println(ChampionsPanel.getValue());
+                            }
+                        }, 30, 1000);
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                    }
+                }else {
+                    ChampionsPanel.turnOff();
                 }
+
             }
         });
     }
@@ -136,9 +132,26 @@ public class MainPanelForm {
         JFrame frame = new JFrame("dfg");
 
         frame.setContentPane(new MainPanelForm().panel1);
+        frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+    }
+
+    // TODO: 10/23/2021 do.it.
+    private void invokeImageUpdate(int timer) throws InterruptedException {
+
+    }
+
+    private void updateImageIcon() throws Exception {
+        BufferedImage bufferedImage =
+                ImageManager.simpleResizeImage(ImageManager.imageToBufferedImage(new ImageIcon(new URL("https://ddragon.leagueoflegends.com/cdn/11.21.1/img/profileicon/" + Parser.getIconId() + ".png")).getImage()), 240);
+        ImageIcon imageIcon1 = new ImageIcon(bufferedImage);
+        icon.setIcon(imageIcon1);
+        if (env.isLogging()) {
+            System.out.println("Profile icon updated");
+
+        }
     }
 
     private void setProperItems(JComboBox comboBox) throws Exception {

@@ -4,14 +4,16 @@ import InformationParser.Parser;
 import InformationRetriever.Method;
 import InformationRetriever.RequestRobot;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
+
 
 public class SafeAutoAcceptProcess {
 
     static RequestRobot robot;
-    static Timer timer = new Timer();
+    static Timer timer = new Timer(30000, null);
     static {
         try {
             robot = new RequestRobot();
@@ -20,25 +22,40 @@ public class SafeAutoAcceptProcess {
         }
     }
     public static void stop(){
-        timer.cancel();
+        timer.stop();
     }
-    public static void start() throws Exception {
-
-
-        timer.scheduleAtFixedRate(new TimerTask() {
+    public static void start(){
+        timer = new Timer(1000, new ActionListener() {
             @Override
-            public void run() {
+            public void actionPerformed(ActionEvent e) {
                 try {
                     String searchState = Parser.getSearchState();
                     if (searchState.equals("Found")){
+
                         robot.doRequest("/lol-matchmaking/v1/ready-check/accept", Method.POST);
-                        timer.cancel();
+                        timer.stop();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (Exception exception){
+                    exception.printStackTrace();
                 }
             }
-        }, 30, 1000);
+        });
+        timer.restart();
+
+//        timer.scheduleAtFixedRate(new TimerTask() {
+//            @Override
+//            public void run() {
+//                try {
+//                    String searchState = Parser.getSearchState();
+//                    if (searchState.equals("Found")){
+//                        robot.doRequest("/lol-matchmaking/v1/ready-check/accept", Method.POST);
+//                        timer.cancel();
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }, 30, 1000);
         //Invalid Searching Found
 
     }

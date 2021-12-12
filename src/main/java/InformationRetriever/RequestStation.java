@@ -2,6 +2,7 @@ package InformationRetriever;
 
 import Helper.AuthHelper;
 import Helper.TrustModifier;
+import Helper.env;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -12,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 
 public class RequestStation {
     private final String lockfile;
-
+    private final boolean enableLogging = env.isLogging();
     public RequestStation(String lockfile) {
         this.lockfile = lockfile;
         try {
@@ -70,9 +71,12 @@ public class RequestStation {
 //
         int responsez = httpClient.getResponseCode();
         String responsex = httpClient.getResponseMessage();
-        System.out.println("__________________________________________________");
-        System.out.println("Response from [" + url + "] (POST) is " + responsez + " " + responsex);
-        System.out.println("__________________________________________________");
+        if (enableLogging){
+            System.out.println("__________________________________________________");
+            System.out.println("Response from [" + url + "] (POST) is " + responsez + " " + responsex);
+            System.out.println("__________________________________________________");
+        }
+
 //
         try (BufferedReader in = new BufferedReader(
                 new InputStreamReader(httpClient.getInputStream()))) {
@@ -106,9 +110,12 @@ public class RequestStation {
 //
         int responsez = httpClient.getResponseCode();
         String responsex = httpClient.getResponseMessage();
-        System.out.println("__________________________________________________");
-        System.out.println("Response from [" + url + "] (GET) is " + responsez + " " + responsex);
-        System.out.println("__________________________________________________");
+        if (enableLogging){
+            System.out.println("__________________________________________________");
+            System.out.println("Response from [" + url + "] (GET) is " + responsez + " " + responsex);
+            System.out.println("__________________________________________________");
+        }
+
 //
         try (BufferedReader in = new BufferedReader(
                 new InputStreamReader(httpClient.getInputStream()))) {
@@ -150,15 +157,44 @@ public class RequestStation {
 
         OutputStream stream = httpClient.getOutputStream();
         stream.write(out);
-        System.out.println("__________________________________________________");
-        System.out.println("Put request..." + data + httpClient.getResponseCode() + " " + httpClient.getResponseMessage());
-        System.out.println("__________________________________________________");
+        if (enableLogging) {
+            System.out.println("__________________________________________________");
+            System.out.println("Put request..." + data + httpClient.getResponseCode() + " " + httpClient.getResponseMessage());
+            System.out.println("__________________________________________________");
+        }
         httpClient.disconnect();
 //
     }
 
     private void sendPatchRequest(String request) throws Exception {
-//
+        String url = "https://127.0.0.1:" + AuthHelper.getPort(lockfile) + request;
+        HttpURLConnection httpClient =
+                (HttpURLConnection) new URL(url).openConnection();
+
+        TrustModifier.relaxHostChecking(httpClient);
+        httpClient.setRequestProperty("X-HTTP-Method-Override", "PATCH");
+        httpClient.setRequestMethod("POST");
+        httpClient.setRequestProperty("User-Agent", "Mozilla/5.0");
+        httpClient.setRequestProperty("Accept", "application/json");
+        httpClient.setRequestProperty("Content-Type", "application/json");
+        httpClient.setRequestProperty("Authorization", "Basic " + AuthHelper.get64(lockfile));
+        httpClient.setDoOutput(true);
+        String data =
+
+                "      {\n" +
+                "        \"championId\": 36,\n" +
+                "        \"completed\": true,\n" +
+                "      }\n"
+                ;
+
+        byte[] out = data.getBytes(StandardCharsets.UTF_8);
+
+        OutputStream stream = httpClient.getOutputStream();
+        stream.write(out);
+        System.out.println("__________________________________________________");
+        System.out.println("PATCH request..." + data +" "+ httpClient.getResponseCode() + " " + httpClient.getResponseMessage());
+        System.out.println("__________________________________________________");
+        httpClient.disconnect();
     }
 
 }
